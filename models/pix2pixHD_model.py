@@ -128,7 +128,10 @@ class Pix2PixHDModel(BaseModel):
             inst_map = inst_map.data.cuda()
             edge_map = self.get_edges(inst_map)
             input_label = torch.cat((input_label, edge_map), dim=1)
-        input_label = Variable(input_label, volatile=infer)
+
+        #  这里改了一个东东， 使用了with torch.no_grad(), 不懂是不是真的有用
+        with torch.no_grad():
+            input_label = Variable(input_label)
 
         # real images for training
         if real_image is not None:
